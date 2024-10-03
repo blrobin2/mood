@@ -1,6 +1,5 @@
 import EntryCard from '@/components/EntryCard'
 import NewEntryCard from '@/components/NewEntryCard'
-import { analyze } from '@/lib/ai'
 import { getUserByClerkId } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { Analysis, JournalEntry, Prisma } from '@prisma/client'

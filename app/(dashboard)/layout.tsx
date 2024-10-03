@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         <div>Mood</div>
         <ul>
           {links.map((link) => (
-            <li>
+            <li key={link.href}>
               <Link href={link.href} className="px-2 py-6">
                 {link.label}
               </Link>
