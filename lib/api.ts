@@ -1,4 +1,4 @@
-import { JournalEntry } from '@prisma/client'
+import { Analysis, JournalEntry } from '@prisma/client'
 
 function getURL(path: string) {
   return window.location.origin + path
@@ -27,6 +27,6 @@ export async function updateEntry(id: string, content: string) {
 
   if (res.ok) {
     const data = await res.json()
-    return data.data as JournalEntry
+    return data.data as JournalEntry & { analysis: Analysis | null }
   }
 }
