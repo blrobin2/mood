@@ -30,3 +30,17 @@ export async function updateEntry(id: string, content: string) {
     return data.data as JournalEntry & { analysis: Analysis | null }
   }
 }
+
+export async function askQuestion(question: string) {
+  const res = await fetch(
+    new Request(getURL('/api/question'), {
+      method: 'POST',
+      body: JSON.stringify({ question }),
+    })
+  )
+
+  if (res.ok) {
+    const data = await res.json()
+    return data.data
+  }
+}

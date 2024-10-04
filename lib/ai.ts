@@ -1,7 +1,10 @@
-import { ChatOpenAI } from '@langchain/openai'
+import { ChatOpenAI, OpenAIEmbeddings } from '@langchain/openai'
 import { StructuredOutputParser } from '@langchain/core/output_parsers'
 import z from 'zod'
 import { PromptTemplate } from '@langchain/core/prompts'
+import { Document } from '@langchain/core/documents'
+import { loadQARefineChain } from 'langchain/chains'
+import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 
 export type AnalysisData = {
   mood: string
@@ -66,4 +69,42 @@ export async function analyze(content: string): Promise<AnalysisData> {
   //   } catch (e) {
   //     console.error(e)
   //   }
+}
+
+type PartialJournalEntry = {
+  id: string
+  content: string
+  createdAt: Date
+}
+
+export async function qa(question: string, entries: PartialJournalEntry[]) {
+  const docs = entries.map((entry) => {
+    return new Document({
+      id: entry.id,
+      pageContent: entry.content,
+      metadata: {
+        createdAt: entry.createdAt,
+      },
+    })
+  })
+
+  const model = new ChatOpenAI({
+    temperature: 0,
+    modelName: 'gpt-3.5-turbo',
+    apiKey: process.env['OPENAI_API_KEY'],
+  })
+  const chain = loadQARefineChain(model)
+  const embeddings = new OpenAIEmbeddings({
+    model: 'text-embedding-3-small',
+  })
+
+  const vectorStore = await MemoryVectorStore.fromDocuments(docs, embeddings)
+  const relevantDocs = await vectorStore.similaritySearch(question)
+
+  const res = await chain.invoke({
+    input_documents: relevantDocs,
+    question,
+  })
+
+  return res.output_text
 }
