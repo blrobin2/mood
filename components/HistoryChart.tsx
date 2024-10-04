@@ -1,9 +1,14 @@
 'use client'
 
+import { Analysis } from '@prisma/client'
 import { ResponsiveContainer, Line, XAxis, Tooltip, LineChart } from 'recharts'
 
+type Payload = {
+  payload: Analysis
+}
+
 type CustomToolTipProps = {
-  payload: any[]
+  payload: Payload[]
   label: string
   active: boolean
 }
@@ -36,7 +41,7 @@ function CustomToolTip({ payload, label, active }: CustomToolTipProps) {
 }
 
 type HistoryChartProps = {
-  data: any[]
+  data: Analysis[]
 }
 
 export default function HistoryChart({ data }: HistoryChartProps) {
@@ -51,7 +56,12 @@ export default function HistoryChart({ data }: HistoryChartProps) {
           activeDot={{ r: 8 }}
         />
         <XAxis dataKey="createdAt" />
-        <Tooltip content={<CustomToolTip />} />
+        <Tooltip
+          content={
+            // @ts-expect-error('receives arguments dynamically')
+            <CustomToolTip />
+          }
+        />
       </LineChart>
     </ResponsiveContainer>
   )
