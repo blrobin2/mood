@@ -18,6 +18,7 @@ export async function POST() {
     data: {
       ...analysis,
       entryId: entry.id,
+      userId: user.id,
     },
   })
 

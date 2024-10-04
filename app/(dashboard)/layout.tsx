@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react'
 const links = [
   { href: '/', label: 'Home' },
   { href: '/journal', label: 'Journal' },
+  { href: '/history', label: 'History' },
 ]
 
 export default function DashboardLayout({ children }: PropsWithChildren) {

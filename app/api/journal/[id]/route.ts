@@ -30,7 +30,11 @@ export async function PATCH(request: Request, { params }: PatchParams) {
       entryId: updatedEntry.id,
     },
     update: analysis,
-    create: { ...analysis, entryId: updatedEntry.id },
+    create: {
+      ...analysis,
+      entryId: updatedEntry.id,
+      userId: updatedEntry.userId,
+    },
   })
 
   return NextResponse.json({
